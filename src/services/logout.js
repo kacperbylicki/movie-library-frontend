@@ -1,14 +1,10 @@
 import { axiosInstance } from "./axios-instance";
 
-export const createMovie = async (payload) => {
+export const logoutAccount = async () => {
   try {
-    const {
-      data: { data },
-    } = await axiosInstance.post("movies", payload);
+    await axiosInstance.post("/accounts/logout");
 
-    return {
-      movie: data,
-    };
+    return {};
   } catch (error) {
     const errorSummary = error?.response?.data ?? { title: error.message };
 

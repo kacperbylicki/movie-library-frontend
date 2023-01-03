@@ -1,13 +1,17 @@
 <template>
   <section class="grid place-items-end">
     <div class="navbar bg-base-100">
-      <div class="navbar-start"></div>
+      <div class="navbar-start">
+        <LogoButton />
+      </div>
       <div class="navbar-center"></div>
       <div class="navbar-end">
         <div class="flex-none">
-          <ul class="menu menu-horizontal p-0">
-            <li><a @click="redirectToMoviesList">Movies List</a></li>
-            <li><a @click="redirectToMovieCreation">Create Movie</a></li>
+          <ul class="menu menu-horizontal gap-4">
+            <SearchButton />
+            <CreateMovieButton v-if="isAdminOrModerator" />
+            <LoginButton v-if="!isAuthenticated" />
+            <LogoutButton v-if="isAuthenticated" />
           </ul>
         </div>
       </div>
@@ -15,15 +19,17 @@
   </section>
 </template>
 
-<script>
-export default {
-  methods: {
-    redirectToMovieCreation() {
-      this.$router.push("/create-movie");
-    },
-    redirectToMoviesList() {
-      this.$router.push("/");
-    },
-  },
-};
+<script setup>
+import CreateMovieButton from "./buttons/CreateMovieButton.vue";
+import LoginButton from "./buttons/LoginButton.vue";
+import LogoButton from "./buttons/LogoButton.vue";
+import LogoutButton from "./buttons/LogoutButton.vue";
+import SearchButton from "./buttons/SearchButton.vue";
+import { computed } from "vue";
+import { useStore } from "vuex";
+
+const store = useStore();
+
+const isAuthenticated = computed(() => store.getters.isAuthenticated);
+const isAdminOrModerator = computed(() => store.getters.isAdminOrModerator);
 </script>

@@ -1,12 +1,26 @@
 <template>
-  <form @submit="handleCreateMovie">
+  <form class="max-w-lg" @submit="handleCreateMovie">
+    <Field v-slot="{ handleChange, handleBlur }" name="image">
+      <input
+        type="file"
+        accept="image/*"
+        class="file-input file-input-bordered w-full max-w-lg mt-10"
+        :class="{ 'file-input-secondary': !errors.image, 'file-input-error': errors.image }"
+        @change="handleChange"
+        @blur="handleBlur"
+      />
+    </Field>
+    <label v-if="errors.image" class="label">
+      <ErrorMessage as="span" name="image" class="label-text-alt text-error" />
+    </label>
+
     <input
       v-model="title"
       name="title"
       type="text"
       placeholder="Title"
-      class="input input-bordered w-full max-w-lg mt-10"
-      :class="{ 'input-primary': !errors.title, 'input-error': errors.title }"
+      class="input input-bordered w-full max-w-lg mt-4"
+      :class="{ 'input-secondary': !errors.title, 'input-error': errors.title }"
     />
     <label v-if="errors.title" class="label">
       <ErrorMessage as="span" name="title" class="label-text-alt text-error" />
@@ -20,7 +34,7 @@
       :max="2022"
       placeholder="Release Year"
       class="input input-bordered w-full max-w-lg mt-6"
-      :class="{ 'input-primary': !errors.releaseYear, 'input-error': errors.releaseYear }"
+      :class="{ 'input-secondary': !errors.releaseYear, 'input-error': errors.releaseYear }"
     />
     <label v-if="errors.releaseYear" class="label">
       <ErrorMessage as="span" name="releaseYear" class="label-text-alt text-error" />
@@ -34,7 +48,7 @@
           placeholder="Genres"
           class="input input-bordered w-full max-w-lg mt-6"
           :class="{
-            'input-primary': !errors[`genre[${idx}]`],
+            'input-secondary': !errors[`genre[${idx}]`],
             'input-error': errors[`genre[${idx}]`],
           }"
         />
@@ -68,7 +82,7 @@
           placeholder="Producers"
           class="input input-bordered w-full max-w-lg mt-6"
           :class="{
-            'input-primary': !errors[`producers[${idx}]`],
+            'input-secondary': !errors[`producers[${idx}]`],
             'input-error': errors[`producers[${idx}]`],
           }"
         />
@@ -102,7 +116,7 @@
           placeholder="Directors"
           class="input input-bordered w-full max-w-lg mt-6"
           :class="{
-            'input-primary': !errors[`directors[${idx}]`],
+            'input-secondary': !errors[`directors[${idx}]`],
             'input-error': errors[`directors[${idx}]`],
           }"
         />
@@ -136,7 +150,7 @@
           placeholder="Actor"
           class="input input-bordered w-full max-w-xs mt-6"
           :class="{
-            'input-primary': !errors[`roles[${idx}].actor`],
+            'input-secondary': !errors[`roles[${idx}].actor`],
             'input-error': errors[`roles[${idx}].actor`],
           }"
         />
@@ -146,7 +160,7 @@
           placeholder="Character"
           class="input input-bordered w-full max-w-xs mt-6"
           :class="{
-            'input-primary': !errors[`roles[${idx}].character`],
+            'input-secondary': !errors[`roles[${idx}].character`],
             'input-error': errors[`roles[${idx}].character`],
           }"
         />
@@ -179,14 +193,14 @@
       </label>
     </div>
 
-    <button class="btn btn-primary btn-wide mt-6 max-w-lg w-full" @click="handleCreateMovie">
+    <button class="btn btn-secondary btn-wide mt-6 max-w-lg w-full" @click="handleCreateMovie">
       Add Movie
     </button>
   </form>
 </template>
 <script setup>
-import MinusSignIcon from "../assets/icons/MinusSignIcon.vue";
-import PlusSignIcon from "../assets/icons/PlusSignIcon.vue";
+import MinusSignIcon from "../components/icons/MinusSignIcon.vue";
+import PlusSignIcon from "../components/icons/PlusSignIcon.vue";
 import { ErrorMessage, Field, useField, useFieldArray, useForm } from "vee-validate";
 import { createMovie } from "../services/index.js";
 import { movieValidationSchema } from "../validators/movie.validator.js";
@@ -206,6 +220,7 @@ const { handleSubmit, errors } = useForm({
   },
 });
 
+useField("image");
 const { value: title } = useField("title");
 const { value: releaseYear } = useField("releaseYear");
 const { remove: removeGenre, push: pushGenre, fields: genre } = useFieldArray("genre");
@@ -221,9 +236,27 @@ const {
 } = useFieldArray("directors");
 const { remove: removeRole, push: pushRole, fields: roles } = useFieldArray("roles");
 
+const convertBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(file);
+
+    fileReader.onload = () => {
+      resolve(fileReader.result);
+    };
+
+    fileReader.onerror = (error) => {
+      reject(error);
+    };
+  });
+};
+
 const handleCreateMovie = handleSubmit(async (payload) => {
   try {
-    const { error } = await createMovie(payload);
+    const posterBase64 = await convertBase64(payload.image);
+    const posterPayload = posterBase64.split(",").pop();
+
+    const { error } = await createMovie({ ...payload, poster: posterPayload });
 
     if (!error) {
       alert("success!");

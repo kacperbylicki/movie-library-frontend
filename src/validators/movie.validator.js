@@ -18,8 +18,9 @@ const isAllowedMovieGenre = (genre) => {
 };
 
 export const movieValidationSchema = yup.object().shape({
+  image: yup.mixed().required("Poster image is required"),
   title: yup.string().required("Title is required"),
-  genres: yup.array().of(
+  genre: yup.array().of(
     yup
       .string()
       .test("valid", "Enter valid, simplified movie genre", (val) => isAllowedMovieGenre(val))

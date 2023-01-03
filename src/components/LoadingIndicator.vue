@@ -3,3 +3,4 @@
     <button class="btn btn-square loading"></button>
   </section>
 </template>
+<script setup></script>
