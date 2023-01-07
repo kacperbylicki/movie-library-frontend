@@ -1,7 +1,7 @@
 <template>
-  <button class="btn btn-ghost btn-square btn-sm" @click="redirectToMovieCreation">
+  <label for="searchModal" class="btn btn-ghost btn-square btn-sm">
     <MagnifierIcon class="h-4 w-4 fill-neutral-content" />
-  </button>
+  </label>
 </template>
 <script setup>
 import MagnifierIcon from "../icons/MagnifierIcon.vue";

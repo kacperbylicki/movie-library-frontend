@@ -1,13 +1,11 @@
 import { axiosInstance } from "./axios-instance";
 
-export const registerAccount = async (payload) => {
+export const confirmAccount = async (payload) => {
   try {
-    const {
-      data: { data },
-    } = await axiosInstance.post("/accounts/register", payload);
+    await axiosInstance.post("accounts/confirm", payload);
 
     return {
-      account: data,
+      userConfirmed: true,
     };
   } catch (error) {
     const errorResponse = error?.response;
@@ -15,7 +13,7 @@ export const registerAccount = async (payload) => {
 
     const errorSummary = {
       ...errorResponse?.data,
-      title: errorTitle ?? "Unknown error occurred",
+      title: errorTitle ?? errorResponse?.data?.title,
     };
 
     return {

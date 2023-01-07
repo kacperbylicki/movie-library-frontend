@@ -1,4 +1,11 @@
 <template>
+  <ErrorAlert v-if="errorMessage" class="mx-auto w-full mt-2" :error-message="errorMessage" />
+  <SuccessAlert
+    v-if="successMessage"
+    class="mx-auto w-full mt-2"
+    :success-message="successMessage"
+  />
+
   <form class="max-w-lg" @submit="handleCreateMovie">
     <Field v-slot="{ handleChange, handleBlur }" name="image">
       <input
@@ -193,17 +200,32 @@
       </label>
     </div>
 
-    <button class="btn btn-secondary btn-wide mt-6 max-w-lg w-full" @click="handleCreateMovie">
+    <button
+      v-if="isLoading"
+      class="btn btn-secondary btn-wide mt-6 max-w-lg w-full loading"
+    ></button>
+    <button
+      v-else
+      class="btn btn-secondary btn-wide mt-6 max-w-lg w-full"
+      @click="handleCreateMovie"
+    >
       Add Movie
     </button>
   </form>
 </template>
 <script setup>
+import ErrorAlert from "../components/ErrorAlert.vue";
 import MinusSignIcon from "../components/icons/MinusSignIcon.vue";
 import PlusSignIcon from "../components/icons/PlusSignIcon.vue";
+import SuccessAlert from "../components/SuccessAlert.vue";
 import { ErrorMessage, Field, useField, useFieldArray, useForm } from "vee-validate";
 import { createMovie } from "../services/index.js";
 import { movieValidationSchema } from "../validators/movie.validator.js";
+import { ref } from "vue";
+
+const isLoading = ref(false);
+const errorMessage = ref(null);
+const successMessage = ref(null);
 
 const { handleSubmit, errors } = useForm({
   validationSchema: movieValidationSchema,
@@ -236,6 +258,13 @@ const {
 } = useFieldArray("directors");
 const { remove: removeRole, push: pushRole, fields: roles } = useFieldArray("roles");
 
+const resetMessages = () => {
+  setTimeout(() => {
+    successMessage.value = null;
+    errorMessage.value = null;
+  }, 3000);
+};
+
 const convertBase64 = (file) => {
   return new Promise((resolve, reject) => {
     const fileReader = new FileReader();
@@ -253,19 +282,28 @@ const convertBase64 = (file) => {
 
 const handleCreateMovie = handleSubmit(async (payload) => {
   try {
+    isLoading.value = true;
+
     const posterBase64 = await convertBase64(payload.image);
     const posterPayload = posterBase64.split(",").pop();
 
     const { error } = await createMovie({ ...payload, poster: posterPayload });
 
     if (!error) {
-      alert("success!");
+      isLoading.value = false;
+      successMessage.value = "Movie successfully created";
+      resetMessages();
+
       return;
     }
 
-    alert(error.message);
+    isLoading.value = false;
+    errorMessage.value = error?.title === "Conflict" ? "Movie already exists" : error?.title;
+    resetMessages();
   } catch (error) {
-    alert(error);
+    isLoading.value = false;
+    errorMessage.value = error.message;
+    resetMessages();
   }
 });
 </script>

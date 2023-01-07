@@ -1,13 +1,13 @@
 import { axiosInstance } from "./axios-instance";
 
-export const refreshTokens = async (userId, refreshToken) => {
+export const resendConfirmationCode = async (payload) => {
   try {
     const {
-      data: { data },
-    } = await axiosInstance.post("/accounts/refresh-token", { userId, refreshToken });
+      data: { destination },
+    } = await axiosInstance.post("accounts/confirm/resend", payload);
 
     return {
-      ...data,
+      destination,
     };
   } catch (error) {
     const errorSummary = error?.response?.data ?? { title: error.message };

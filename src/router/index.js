@@ -54,7 +54,7 @@ export const router = createRouter({
 router.beforeEach(async (to) => {
   if (
     to.matched.some((record) => record?.meta?.requiresNotConfirmedAccount) &&
-    store.getters.isConfirmedAccount
+    store.getters.isAccountConfirmed
   ) {
     await router.push({ name: "Home" });
   }

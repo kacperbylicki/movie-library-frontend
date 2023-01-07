@@ -1,44 +1,19 @@
 <template>
   <LoadingIndicator v-if="isLoading" />
-  <!--  <section v-if="movies?.length > 0" class="grid place-items-center">-->
-  <!--    <div class="overflow-x-auto">-->
-  <!--      <table class="table table-fixed w-full">-->
-  <!--        <thead>-->
-  <!--          <tr>-->
-  <!--            <th></th>-->
-  <!--            <th>Title</th>-->
-  <!--            <th>Release Year</th>-->
-  <!--            <th>Genres</th>-->
-  <!--            <th>Directors</th>-->
-  <!--            <th>Producers</th>-->
-  <!--            <th>Roles</th>-->
-  <!--          </tr>-->
-  <!--        </thead>-->
-  <!--        <tbody>-->
-  <!--          <tr v-for="(movie, index) in movies" :key="index">-->
-  <!--            <th>{{ index + 1 }}</th>-->
-  <!--            <td>{{ movie.title }}</td>-->
-  <!--            <td>{{ movie.releaseYear }}</td>-->
-  <!--            <td>{{ movie.genre }}</td>-->
-  <!--            <td>{{ movie.directors }}</td>-->
-  <!--            <td>{{ movie.producers }}</td>-->
-  <!--            <td>{{ movie.roles }}</td>-->
-  <!--          </tr>-->
-  <!--        </tbody>-->
-  <!--      </table>-->
-  <!--    </div>-->
   <MoviesCarousel
-    v-for="[category, movies] in this.movies"
+    v-for="[category, movies] in moviesByGenre"
     :key="category"
-    :category="category"
+    :title="category"
     :movies="movies"
+    :padding="4"
+    :margin="2"
   />
 </template>
 <script>
 import LoadingIndicator from "../components/LoadingIndicator.vue";
-import MoviesCarousel from "../components/movie-items/MoviesCarousel.vue";
+import MoviesCarousel from "../components/movies/MoviesCarousel.vue";
 import { getMovies } from "../services/index.js";
-import { mapMutations } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   components: {
@@ -49,8 +24,11 @@ export default {
     return {
       isLoading: false,
       errorMessage: null,
-      movies: [],
+      moviesByGenre: [],
     };
+  },
+  computed: {
+    ...mapGetters(["movies"]),
   },
   async mounted() {
     this.isLoading = true;
@@ -80,14 +58,18 @@ export default {
 
         if (!error) {
           this.setMovies(movies);
-          this.movies = this.groupMoviesByGenre(movies);
+          this.moviesByGenre = this.groupMoviesByGenre(movies);
+
+          return;
         }
 
         this.isLoading = false;
-        this.errorMessage = error?.message;
+        this.errorMessage = error?.title;
+        // If connection refused, then uses cached movies
+        this.moviesByGenre = this.groupMoviesByGenre(this.movies);
       } catch (error) {
         this.isLoading = false;
-        this.errorMessage = error?.message;
+        this.errorMessage = error?.title;
       }
     },
   },

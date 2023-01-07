@@ -12,14 +12,16 @@ export const loginAccount = async (payload) => {
       groups,
     };
   } catch (error) {
+    const errorResponse = error?.response;
+    const errorTitle = errorResponse?.data?.explanation;
+
     const errorSummary = {
-      ...error?.response?.data,
-      title:
-        error.response.status === 401 ? "Invalid username or password" : "Unknown error occurred",
-    } ?? { title: error.message };
+      ...errorResponse?.data,
+      title: errorTitle ?? "Unknown error occurred",
+    };
 
     return {
-      error: errorSummary,
+      error: errorSummary ?? { title: error.message },
     };
   }
 };

@@ -1,13 +1,11 @@
 import { axiosInstance } from "./axios-instance";
 
-export const refreshTokens = async (userId, refreshToken) => {
+export const createComment = async (movieId, payload) => {
   try {
-    const {
-      data: { data },
-    } = await axiosInstance.post("/accounts/refresh-token", { userId, refreshToken });
+    const { data } = await axiosInstance.post(`movies/${movieId}/comments`, payload);
 
     return {
-      ...data,
+      comment: data,
     };
   } catch (error) {
     const errorSummary = error?.response?.data ?? { title: error.message };

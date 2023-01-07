@@ -73,17 +73,24 @@ export default {
 
       try {
         const { error } = await this.login(payload);
+
         this.isLoading = false;
 
         if (!error) {
           await this.$router.push("/");
+          return;
         }
 
-        this.errorMessage = error?.message;
+        if (error?.explanation) {
+          await this.$router.push("/confirm-account");
+          return;
+        }
+
+        this.errorMessage = error?.title;
         this.resetErrorMessage();
       } catch (error) {
         this.isLoading = false;
-        this.errorMessage = error?.message;
+        this.errorMessage = error?.title;
         this.resetErrorMessage();
       }
     },

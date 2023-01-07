@@ -14,14 +14,10 @@ const store = useStore();
 const router = useRouter();
 
 const handleLogout = async () => {
-  try {
-    const { error } = await store.dispatch("logout");
+  const { error } = await store.dispatch("logout");
 
-    if (!error) {
-      await router.push("/login");
-    }
-  } catch (error) {
-    console.log(error.title);
+  if (!error) {
+    await router.push("/login");
   }
 };
 </script>

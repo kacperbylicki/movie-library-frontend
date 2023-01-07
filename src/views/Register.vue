@@ -102,13 +102,13 @@ export default {
         if (!error) {
           this.isLoading = false;
           await this.$router.push("/login");
+        } else {
+          this.errorMessage = error?.title;
+          this.resetErrorMessage();
         }
-
-        this.errorMessage = error?.message;
-        this.resetErrorMessage();
       } catch (error) {
         this.isLoading = false;
-        this.errorMessage = error?.message;
+        this.errorMessage = error?.title;
         this.resetErrorMessage();
       }
     },

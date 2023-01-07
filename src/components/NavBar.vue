@@ -17,6 +17,8 @@
       </div>
     </div>
   </section>
+
+  <SearchModal />
 </template>
 
 <script setup>
@@ -25,6 +27,7 @@ import LoginButton from "./buttons/LoginButton.vue";
 import LogoButton from "./buttons/LogoButton.vue";
 import LogoutButton from "./buttons/LogoutButton.vue";
 import SearchButton from "./buttons/SearchButton.vue";
+import SearchModal from "./SearchModal.vue";
 import { computed } from "vue";
 import { useStore } from "vuex";
 
