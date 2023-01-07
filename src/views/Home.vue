@@ -6,7 +6,6 @@
     :title="category"
     :movies="movies"
     :padding="4"
-    :margin="2"
   />
 </template>
 <script>

@@ -39,7 +39,7 @@ export const movieValidationSchema = yup.object().shape({
   ),
   releaseYear: yup
     .number()
-    .min(1900, "Release year must be at least 1900")
-    .max(2022, "Release year must be up to 2022")
+    .min(1888, "Release year must be at least 1888")
+    .max(2023, "Release year must be up to 2023")
     .required("Release year is required"),
 });

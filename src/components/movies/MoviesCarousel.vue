@@ -1,12 +1,9 @@
 <template>
-  <section :class="`md:p-${padding}`">
-    <div v-if="title" class="badge badge-secondary badge-lg p-4" :class="`m-${margin}`">
+  <section :class="`grid p-${padding}`">
+    <div v-if="title" class="m-2 badge badge-secondary badge-lg p-4">
       {{ title }}
     </div>
-    <div
-      class="carousel carousel-center max-w-80 p-4 space-x-4 bg-neutral rounded-box"
-      :class="`m-${margin}`"
-    >
+    <div class="m-2 carousel carousel-center max-w-80 p-4 space-x-4 bg-neutral rounded-box">
       <MoviesCarouselItem
         v-for="(movie, index) in movies"
         :key="index"
@@ -26,13 +23,21 @@ const router = useRouter();
 
 const emit = defineEmits(["moviePicked"]);
 const props = defineProps({
-  title: String,
-  movies: Array,
-  padding: Number,
-  margin: Number,
+  title: {
+    type: String,
+    default: "",
+  },
+  movies: {
+    type: Array,
+    default: () => [],
+  },
+  padding: {
+    type: Number,
+    default: 4,
+  },
 });
 
-const { title, movies, padding, margin } = toRefs(props);
+const { title, movies, padding } = toRefs(props);
 
 const redirectToMoviePage = async (movie) => {
   await router.push(`/movie/${movie.uuid}`);

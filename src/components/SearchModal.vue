@@ -15,7 +15,6 @@
         v-if="searchPrompt && filteredMovies.length"
         :movies="filteredMovies"
         :padding="0"
-        :margin="0"
         @movie-picked="resetPrompt"
       />
     </label>
