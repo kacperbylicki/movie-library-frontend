@@ -73,9 +73,11 @@ import ErrorAlert from "../ErrorAlert.vue";
 import MenuButton from "../buttons/MenuButton.vue";
 import MovieMenu from "./MovieMenu.vue";
 import { computed, ref, toRefs } from "vue";
+import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
 const store = useStore();
+const router = useRouter();
 
 const isAdmin = computed(() => store.getters.isAdmin);
 
@@ -108,12 +110,14 @@ const handleDeleteMovie = async (movieId) => {
       movieId,
     });
 
-    errorMessage.value = error?.title;
+    if (!error) {
+      router.push("/");
+    }
 
+    errorMessage.value = error?.title;
     resetErrorMessage();
   } catch (error) {
     errorMessage.value = error.message;
-
     resetErrorMessage();
   }
 };
