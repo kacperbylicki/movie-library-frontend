@@ -12,6 +12,8 @@ const isAllowedMovieGenre = (genre) => {
     "Romance",
     "Thriller",
     "Western",
+    "Adventure",
+    "Crime",
   ];
 
   return genres.includes(genre);
