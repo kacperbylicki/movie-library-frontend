@@ -45,7 +45,7 @@ export const movies = {
       state.movies = movies;
     },
     pullMovie: (state, { movieId }) => {
-      const updatedMovies = movies.filter((movie) => movie.uuid !== movieId);
+      const updatedMovies = state.movies.filter((movie) => movie.uuid !== movieId);
 
       state.movies = updatedMovies;
     },
