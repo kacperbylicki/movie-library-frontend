@@ -5,7 +5,7 @@
 
       <h2 class="card-title justify-between">
         {{ movie.title }}
-        <div v-if="isAdminOrModerator" class="dropdown dropdown-end">
+        <div v-if="isAdmin" class="dropdown dropdown-end">
           <MenuButton />
           <MovieMenu :movie-id="movie.uuid" @delete-movie="handleDeleteMovie" />
         </div>
@@ -77,7 +77,7 @@ import { useStore } from "vuex";
 
 const store = useStore();
 
-const isAdminOrModerator = computed(() => store.getters.isAdminOrModerator);
+const isAdmin = computed(() => store.getters.isAdmin);
 
 const props = defineProps({
   movie: {
