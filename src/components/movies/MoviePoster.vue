@@ -8,6 +8,9 @@
 
 <script setup>
 const props = defineProps({
-  posterUrl: String,
+  posterUrl: {
+    type: String,
+    default: "",
+  },
 });
 </script>

@@ -65,7 +65,10 @@ const isAuthenticated = computed(() => store.getters.isAuthenticated);
 const isCommentOwner = computed(() => store.getters.isCommentOwner);
 
 const props = defineProps({
-  movie: Object,
+  movie: {
+    type: Object,
+    default: () => {},
+  },
 });
 
 const { movie } = toRefs(props);

@@ -8,6 +8,9 @@
 import { defineProps } from "vue";
 
 defineProps({
-  posterUrl: String,
+  posterUrl: {
+    type: String,
+    default: "",
+  },
 });
 </script>

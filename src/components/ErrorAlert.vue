@@ -20,6 +20,9 @@
 </template>
 <script setup>
 defineProps({
-  errorMessage: String,
+  errorMessage: {
+    type: String,
+    default: "",
+  },
 });
 </script>

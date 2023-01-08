@@ -19,7 +19,10 @@
 import { defineProps, toRefs } from "vue";
 
 const props = defineProps({
-  commentId: String,
+  commentId: {
+    type: String,
+    default: "",
+  },
 });
 
 const { commentId } = toRefs(props);

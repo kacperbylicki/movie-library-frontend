@@ -66,7 +66,10 @@
 import { toRefs } from "vue";
 
 const props = defineProps({
-  movie: Object,
+  movie: {
+    type: Object,
+    default: () => {},
+  },
 });
 
 const { movie } = toRefs(props);
