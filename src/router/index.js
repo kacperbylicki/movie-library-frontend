@@ -7,7 +7,7 @@ const routes = [
     name: "Create Movie",
     component: () => import(/* webpackChunkName: "create-movie" */ "../views/CreateMovie.vue"),
     meta: {
-      requiresAdminAccess: true,
+      requiresAdminOrModeratorAccess: true,
     },
   },
   {
@@ -59,7 +59,10 @@ router.beforeEach(async (to) => {
     await router.push({ name: "Home" });
   }
 
-  if (to.matched.some((record) => record?.meta?.requiresAdminAccess) && !store.getters.isAdmin) {
+  if (
+    to.matched.some((record) => record?.meta?.requiresAdminOrModeratorAccess) &&
+    !store.getters.isAdminOrModerator
+  ) {
     await router.push({ name: "Home" });
   }
 });
