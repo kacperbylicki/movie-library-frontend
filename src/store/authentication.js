@@ -87,7 +87,11 @@ export const authentication = {
 
       if (!error) {
         commit("setTokens", { accessToken, refreshToken });
+
+        return;
       }
+
+      commit("clearAccountData");
 
       return {
         error,

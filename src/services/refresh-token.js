@@ -2,9 +2,7 @@ import { axiosInstance } from "./axios-instance";
 
 export const refreshTokens = async (userId, refreshToken) => {
   try {
-    const {
-      data: { data },
-    } = await axiosInstance.post("/accounts/refresh-token", { userId, refreshToken });
+    const { data } = await axiosInstance.post("/accounts/refresh-token", { userId, refreshToken });
 
     return {
       ...data,
