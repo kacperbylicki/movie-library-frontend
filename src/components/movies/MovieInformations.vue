@@ -1,8 +1,14 @@
 <template>
   <div class="card bg-base-100 shadow-xl">
     <div class="card-body p-6">
-      <h2 class="card-title">
+      <ErrorAlert v-if="errorMessage" class="mx-auto w-full mt-2" :error-message="errorMessage" />
+
+      <h2 class="card-title justify-between">
         {{ movie.title }}
+        <div v-if="isAdminOrModerator" class="dropdown dropdown-end">
+          <MenuButton />
+          <MovieMenu :movie-id="movie.uuid" @delete-movie="handleDeleteMovie" />
+        </div>
         <!-- <span class="badge badge-accent badge-md">{{ calculateAvgRating(movie.ratings) }}</span> -->
       </h2>
 
@@ -63,7 +69,15 @@
 </template>
 
 <script setup>
-import { toRefs } from "vue";
+import ErrorAlert from "../ErrorAlert.vue";
+import MenuButton from "../buttons/MenuButton.vue";
+import MovieMenu from "./MovieMenu.vue";
+import { computed, ref, toRefs } from "vue";
+import { useStore } from "vuex";
+
+const store = useStore();
+
+const isAdminOrModerator = computed(() => store.getters.isAdminOrModerator);
 
 const props = defineProps({
   movie: {
@@ -74,9 +88,33 @@ const props = defineProps({
 
 const { movie } = toRefs(props);
 
+const errorMessage = ref(null);
+
+const resetErrorMessage = () => {
+  setTimeout(() => {
+    errorMessage.value = null;
+  }, 3000);
+};
+
 const getInitials = (nameSurname) => {
   const [name, surname] = nameSurname.split(" ");
 
   return `${name.charAt(0)}${surname.charAt(0)}`;
+};
+
+const handleDeleteMovie = async (movieId) => {
+  try {
+    const { error } = await store.dispatch("deleteMovie", {
+      movieId,
+    });
+
+    errorMessage.value = error?.title;
+
+    resetErrorMessage();
+  } catch (error) {
+    errorMessage.value = error.message;
+
+    resetErrorMessage();
+  }
 };
 </script>

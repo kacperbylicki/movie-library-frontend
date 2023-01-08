@@ -39,7 +39,7 @@
           {{ comment.user.username }}
         </div>
         <div v-if="isCommentOwner(movieId, comment.uuid)" class="dropdown dropdown-end">
-          <CommentMenuButton />
+          <MenuButton />
           <CommentMenu :comment-id="comment.uuid" @delete-comment="handleDeleteComment" />
         </div>
       </div>
@@ -51,9 +51,9 @@
 </template>
 
 <script setup>
-import CommentMenu from "../CommentMenu.vue";
-import CommentMenuButton from "../buttons/CommentMenuButton.vue";
+import CommentMenu from "./CommentMenu.vue";
 import ErrorAlert from "../ErrorAlert.vue";
+import MenuButton from "../buttons/MenuButton.vue";
 import { ErrorMessage, Field, Form as ValidatedForm } from "vee-validate";
 import { commentValidationSchema } from "../../validators/comment.validator";
 import { computed, ref, toRefs, watch } from "vue";

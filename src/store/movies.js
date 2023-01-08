@@ -1,10 +1,21 @@
-import { createComment, deleteComment } from "../services";
+import { createComment, deleteComment, deleteMovie } from "../services";
 
 export const movies = {
   state: {
     movies: [],
   },
   actions: {
+    deleteMovie: async ({ commit }, { movieId }) => {
+      const { error } = await deleteMovie(movieId);
+
+      if (!error) {
+        commit("pullMovie", { movieId });
+      }
+
+      return {
+        error,
+      };
+    },
     createComment: async ({ commit }, { movieId, payload }) => {
       const { comment, error } = await createComment(movieId, payload);
 
@@ -32,6 +43,11 @@ export const movies = {
   mutations: {
     setMovies: (state, movies) => {
       state.movies = movies;
+    },
+    pullMovie: (state, { movieId }) => {
+      const updatedMovies = movies.filter((movie) => movie.uuid !== movieId);
+
+      state.movies = updatedMovies;
     },
     pushComment: (state, { movieId, comment }) => {
       const movie = state.movies.find((movie) => movie.uuid === movieId);
