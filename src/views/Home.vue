@@ -1,14 +1,16 @@
 <template>
   <LoadingIndicator v-if="isLoading" />
+  <FeaturedMoviesCarousel :movies="movies" />
   <MoviesCarousel
     v-for="[category, movies] in moviesByGenre"
     :key="category"
-    :title="category"
+    :genre="category"
     :movies="movies"
     :padding="4"
   />
 </template>
 <script>
+import FeaturedMoviesCarousel from "../components/movies/FeaturedMoviesCarousel.vue";
 import LoadingIndicator from "../components/LoadingIndicator.vue";
 import MoviesCarousel from "../components/movies/MoviesCarousel.vue";
 import { getMovies } from "../services/index.js";
@@ -18,6 +20,7 @@ export default {
   components: {
     LoadingIndicator,
     MoviesCarousel,
+    FeaturedMoviesCarousel,
   },
   data() {
     return {
@@ -30,9 +33,7 @@ export default {
     ...mapGetters(["movies"]),
   },
   async mounted() {
-    this.isLoading = true;
     await this.fetchMovies();
-    this.isLoading = false;
   },
   methods: {
     ...mapMutations(["setMovies"]),
@@ -53,16 +54,25 @@ export default {
     },
     async fetchMovies() {
       try {
+        this.isLoading = true;
+
         const { movies, error } = await getMovies();
 
         if (!error) {
           this.setMovies(movies);
           this.moviesByGenre = this.groupMoviesByGenre(movies);
 
+          setTimeout(() => {
+            this.isLoading = false;
+          }, 1000);
+
           return;
         }
 
-        this.isLoading = false;
+        setTimeout(() => {
+          this.isLoading = false;
+        }, 1000);
+
         this.errorMessage = error?.title;
         // If connection refused, then uses cached movies
         this.moviesByGenre = this.groupMoviesByGenre(this.movies);

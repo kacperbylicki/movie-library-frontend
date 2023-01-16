@@ -2,7 +2,7 @@
   <section class="grid place-items-end">
     <div class="navbar bg-base-100">
       <div class="navbar-start">
-        <LogoButton />
+        <LogoButton class="h-10 w-10" />
       </div>
       <div class="navbar-center"></div>
       <div class="navbar-end">

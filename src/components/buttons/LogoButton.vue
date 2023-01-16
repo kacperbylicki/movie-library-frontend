@@ -1,7 +1,5 @@
 <template>
-  <a class="cursor-pointer" @click="redirectToMoviesList"
-    ><PlayIcon class="h-10 w-10 fill-secondary"
-  /></a>
+  <a class="cursor-pointer" @click="redirectToMoviesList"><PlayIcon class="fill-secondary" /></a>
 </template>
 
 <script setup>

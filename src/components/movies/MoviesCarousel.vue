@@ -1,7 +1,7 @@
 <template>
   <section :class="`grid p-${padding}`">
-    <div v-if="title" class="m-2 badge badge-secondary badge-lg p-4">
-      {{ title }}
+    <div v-if="genre" class="m-2 badge badge-secondary badge-lg p-4">
+      {{ genre }}
     </div>
     <div class="m-2 carousel carousel-center max-w-80 p-4 space-x-4 bg-neutral rounded-box">
       <MoviesCarouselItem
@@ -23,7 +23,7 @@ const router = useRouter();
 
 const emit = defineEmits(["moviePicked"]);
 const props = defineProps({
-  title: {
+  genre: {
     type: String,
     default: "",
   },
@@ -37,7 +37,7 @@ const props = defineProps({
   },
 });
 
-const { title, movies, padding } = toRefs(props);
+const { genre, movies, padding } = toRefs(props);
 
 const redirectToMoviePage = async (movie) => {
   await router.push(`/movie/${movie.uuid}`);
