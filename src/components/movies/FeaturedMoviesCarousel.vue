@@ -7,14 +7,19 @@
         :key="index"
         :title="movie.title"
         :poster-url="movie.posterUrl"
+        @click="redirectToMoviePage(movie)"
       />
     </div>
   </section>
 </template>
 <script setup>
 import FeaturedMoviesCarouselItem from "./FeaturedMoviesCarouselItem.vue";
-import { defineProps, toRefs } from "vue";
+import { defineEmits, defineProps, toRefs } from "vue";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
+
+const emit = defineEmits(["moviePicked"]);
 const props = defineProps({
   movies: {
     type: Array,
@@ -27,4 +32,9 @@ const { movies } = toRefs(props);
 const featuredMovies = movies.value
   .sort((a, b) => (a.releaseYear < b.releaseYear ? 1 : -1))
   .slice(0, 5);
+
+const redirectToMoviePage = async (movie) => {
+  await router.push(`/movie/${movie.uuid}`);
+  emit("moviePicked");
+};
 </script>

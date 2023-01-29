@@ -11,3 +11,5 @@ export * from "./confirm-account";
 export * from "./resend-confirmation-code";
 export * from "./delete-comment";
 export * from "./delete-movie";
+export * from "./get-favorite-movies";
+export * from "./upsert-favorite-movie";

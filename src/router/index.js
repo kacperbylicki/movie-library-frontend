@@ -41,6 +41,15 @@ const routes = [
     },
   },
   {
+    path: "/favorites",
+    name: "My Favorites",
+    component: () => import(/* webpackChunkName: "my-favorites" */ "../views/MyFavorites.vue"),
+    meta: {
+      requiresCommonUserRole: true,
+      requiresAuthentication: true,
+    },
+  },
+  {
     path: "/:pathMatch(.*)*",
     redirect: "/",
   },
@@ -62,6 +71,20 @@ router.beforeEach(async (to) => {
   if (
     to.matched.some((record) => record?.meta?.requiresAdminOrModeratorAccess) &&
     !store.getters.isAdminOrModerator
+  ) {
+    await router.push({ name: "Home" });
+  }
+
+  if (
+    to.matched.some((record) => record?.meta?.requiresCommonUserRole) &&
+    store.getters.isAdminOrModerator
+  ) {
+    await router.push({ name: "Home" });
+  }
+
+  if (
+    to.matched.some((record) => record?.meta?.requiresAuthentication) &&
+    !store.getters.isAuthenticated
   ) {
     await router.push({ name: "Home" });
   }

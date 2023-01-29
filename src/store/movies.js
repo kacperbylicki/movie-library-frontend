@@ -1,8 +1,9 @@
-import { createComment, deleteComment, deleteMovie } from "../services";
+import { createComment, deleteComment, deleteMovie, upsertFavoriteMovie } from "../services";
 
 export const movies = {
   state: {
     movies: [],
+    favoriteMovies: [],
   },
   actions: {
     deleteMovie: async ({ commit }, { movieId }) => {
@@ -39,6 +40,17 @@ export const movies = {
         error,
       };
     },
+    toggleFavoriteMovie: async ({ commit }, { movieId, isFavorite }) => {
+      const { error } = await upsertFavoriteMovie(movieId, { isFavorite });
+
+      if (!error) {
+        commit("toggleFavoriteMovie", { movieId, isFavorite });
+      }
+
+      return {
+        error,
+      };
+    },
   },
   mutations: {
     setMovies: (state, movies) => {
@@ -69,6 +81,32 @@ export const movies = {
 
       state.movies = updatedMovies;
     },
+    toggleFavoriteMovie: (state, { movieId, isFavorite }) => {
+      const existingMovieIndex = state.favoriteMovies.findIndex(
+        (movie) => movie.movieId === movieId,
+      );
+
+      if (existingMovieIndex !== -1) {
+        state.favoriteMovies[existingMovieIndex].isFavorite = isFavorite;
+      } else {
+        state.favoriteMovies.push({ movieId, isFavorite });
+      }
+    },
+    // toggleFavoriteMovie: (state, { movieId, isFavorite }) => {
+    //   const existingMovie = state.favoriteMovies.find((movie) => movie.movieId === movieId);
+    //   let newFavoriteMovies;
+    //   if (existingMovie) {
+    //     newFavoriteMovies = state.favoriteMovies.map((movie) => {
+    //       if (movie.movieId === movieId) {
+    //         return { ...movie, isFavorite };
+    //       }
+    //       return movie;
+    //     });
+    //   } else {
+    //     newFavoriteMovies = [...state.favoriteMovies, { movieId, isFavorite }];
+    //   }
+    //   state.favoriteMovies = newFavoriteMovies;
+    // },
   },
   getters: {
     movies: (state) => state.movies,
@@ -81,6 +119,14 @@ export const movies = {
       const comment = movie.comments.find((comment) => comment.uuid === commentId);
 
       return comment?.user?.uuid === authentication?.user?.uuid;
+    },
+    favoriteMovies: (state) => state.favoriteMovies,
+    isMovieFavorite: (state) => (movieId) => {
+      const movie = state.favoriteMovies.find(
+        (favoriteMovie) => favoriteMovie.movieId === movieId.value,
+      );
+
+      return movie?.isFavorite ?? false;
     },
   },
 };

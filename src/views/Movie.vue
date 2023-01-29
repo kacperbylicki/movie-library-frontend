@@ -1,9 +1,11 @@
 <template>
-  <div class="grid lg:grid-cols-3 grid-cols-1 gap-8 lg:p-10 p-2 lg:max-h-96">
-    <MoviePoster :poster-url="movie.posterUrl" />
-    <MovieInformations :movie="movie" />
-    <MovieComments :movie="movie" />
-  </div>
+  <section class="grid grid-flow-row w-auto p-2 justify-center">
+    <section class="grid lg:grid-cols-3 grid-cols-1 gap-8 lg:p-10 p-2 lg:max-h-96">
+      <MoviePoster :poster-url="movie.posterUrl" />
+      <MovieInformations :movie="movie" />
+      <MovieComments :movie="movie" />
+    </section>
+  </section>
 </template>
 
 <script setup>

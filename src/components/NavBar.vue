@@ -9,6 +9,7 @@
         <div class="flex-none">
           <ul class="menu menu-horizontal gap-4">
             <SearchButton />
+            <UserFavoritesButton v-if="!isAdminOrModerator && isAuthenticated" />
             <CreateMovieButton v-if="isAdminOrModerator" />
             <LoginButton v-if="!isAuthenticated" />
             <LogoutButton v-if="isAuthenticated" />
@@ -28,6 +29,7 @@ import LogoButton from "./buttons/LogoButton.vue";
 import LogoutButton from "./buttons/LogoutButton.vue";
 import SearchButton from "./buttons/SearchButton.vue";
 import SearchModal from "./SearchModal.vue";
+import UserFavoritesButton from "./buttons/UserFavoritesButton.vue";
 import { computed } from "vue";
 import { useStore } from "vuex";
 

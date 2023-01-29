@@ -2,18 +2,16 @@
   <section class="p-8">
     <footer class="footer p-6 bg-base-100 text-base-content">
       <div>
-        <span class="footer-title text-secondary opacity-100">Services</span>
-        <a class="link link-hover">Branding</a>
-        <a class="link link-hover">Design</a>
-        <a class="link link-hover">Marketing</a>
-        <a class="link link-hover">Advertisement</a>
+        <span class="footer-title text-secondary opacity-100">Platforms</span>
+        <a class="link link-hover" href="https://www.netflix.com" target="_blank">Netflix</a>
+        <a class="link link-hover" href="https://www.hbomax.com/" target="_blank">HBO Max</a>
+        <a class="link link-hover" href="https://www.disneyplus.com" target="_blank">Disney+</a>
       </div>
       <div>
-        <span class="footer-title text-secondary opacity-100">Company</span>
-        <a class="link link-hover">About us</a>
-        <a class="link link-hover">Contact</a>
-        <a class="link link-hover">Jobs</a>
-        <a class="link link-hover">Press kit</a>
+        <span class="footer-title text-secondary opacity-100">Social Media</span>
+        <a class="link link-hover">Instagram</a>
+        <a class="link link-hover">Facebook</a>
+        <a class="link link-hover">Twitter</a>
       </div>
       <div>
         <span class="footer-title text-secondary opacity-100">Legal</span>

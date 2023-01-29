@@ -1,5 +1,5 @@
 <template>
-  <div class="carousel-item">
+  <div class="carousel-item cursor-pointer">
     <div class="w-full flex justify-center items-center">
       <div class="relative z-0">
         <img

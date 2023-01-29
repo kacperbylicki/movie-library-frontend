@@ -122,6 +122,7 @@ export const authentication = {
       state.isAuthenticated = false;
       state.isAdmin = false;
       state.isModerator = false;
+      state.favoriteMovies = [];
     },
   },
   getters: {

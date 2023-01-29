@@ -1,16 +1,20 @@
 <template>
-  <LoadingIndicator v-if="isLoading" />
-  <FeaturedMoviesCarousel :movies="movies" />
-  <MoviesCarousel
-    v-for="[category, movies] in moviesByGenre"
-    :key="category"
-    :genre="category"
-    :movies="movies"
-    :padding="4"
-  />
+  <section class="grid grid-flow-row w-auto p-2 justify-center">
+    <LoadingIndicator v-if="isLoading" />
+    <FeaturedMoviesCarousel :movies="movies" />
+    <MoviesCarousel
+      v-for="[category, movies] in moviesByGenre"
+      :key="category"
+      :genre="category"
+      :movies="movies"
+      :padding="4"
+    />
+    <FooterSection />
+  </section>
 </template>
 <script>
 import FeaturedMoviesCarousel from "../components/movies/FeaturedMoviesCarousel.vue";
+import FooterSection from "../components/FooterSection.vue";
 import LoadingIndicator from "../components/LoadingIndicator.vue";
 import MoviesCarousel from "../components/movies/MoviesCarousel.vue";
 import { getMovies } from "../services/index.js";
@@ -21,6 +25,7 @@ export default {
     LoadingIndicator,
     MoviesCarousel,
     FeaturedMoviesCarousel,
+    FooterSection,
   },
   data() {
     return {
