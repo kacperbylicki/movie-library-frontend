@@ -22,12 +22,35 @@
         <ErrorMessage as="span" name="image" class="label-text-alt text-error" />
       </label>
 
+      <div class="form-control w-full max-w-lg mt-2">
+        <label class="label">
+          <span class="label-text">Select video stream key</span>
+        </label>
+        <select
+          v-model="videoStreamKey"
+          name="videoStreamKey"
+          class="select"
+          :class="{
+            'select-secondary': !errors.videoStreamKey,
+            'select-error': errors.videoStreamKey,
+          }"
+        >
+          <option v-for="(streamKey, index) in videoStreamKeys" :key="index">
+            {{ streamKey }}
+          </option>
+        </select>
+
+        <label v-if="errors.videoStreamKey" class="label">
+          <ErrorMessage as="span" name="videoStreamKey" class="label-text-alt text-error" />
+        </label>
+      </div>
+
       <input
         v-model="title"
         name="title"
         type="text"
         placeholder="Title"
-        class="input input-bordered w-full max-w-lg mt-4"
+        class="input input-bordered w-full max-w-lg mt-6"
         :class="{ 'input-secondary': !errors.title, 'input-error': errors.title }"
       />
       <label v-if="errors.title" class="label">
@@ -201,15 +224,8 @@
         </label>
       </div>
 
-      <button
-        v-if="isLoading"
-        class="btn btn-secondary btn-wide mt-6 max-w-lg w-full loading"
-      ></button>
-      <button
-        v-else
-        class="btn btn-secondary btn-wide mt-6 max-w-lg w-full"
-        @click="handleCreateMovie"
-      >
+      <button v-if="isLoading" class="btn btn-secondary mt-6 max-w-lg w-full loading"></button>
+      <button v-else class="btn btn-secondary mt-6 max-w-lg w-full" @click="handleCreateMovie">
         Add Movie
       </button>
     </form>
@@ -221,13 +237,14 @@ import MinusSignIcon from "../components/icons/MinusSignIcon.vue";
 import PlusSignIcon from "../components/icons/PlusSignIcon.vue";
 import SuccessAlert from "../components/SuccessAlert.vue";
 import { ErrorMessage, Field, useField, useFieldArray, useForm } from "vee-validate";
-import { createMovie } from "../services/index.js";
+import { createMovie, getVideoStreamKeys } from "../services/index.js";
 import { movieValidationSchema } from "../validators/movie.validator.js";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 const isLoading = ref(false);
 const errorMessage = ref(null);
 const successMessage = ref(null);
+const videoStreamKeys = ref([]);
 
 const { handleSubmit, errors } = useForm({
   validationSchema: movieValidationSchema,
@@ -245,6 +262,7 @@ const { handleSubmit, errors } = useForm({
 });
 
 useField("image");
+const { value: videoStreamKey } = useField("videoStreamKey");
 const { value: title } = useField("title");
 const { value: releaseYear } = useField("releaseYear");
 const { remove: removeGenre, push: pushGenre, fields: genre } = useFieldArray("genre");
@@ -307,5 +325,25 @@ const handleCreateMovie = handleSubmit(async (payload) => {
     errorMessage.value = error.message;
     resetMessages();
   }
+});
+
+const getVideosStreamKeys = async () => {
+  try {
+    const { data, error } = await getVideoStreamKeys();
+
+    if (!error) {
+      return data;
+    }
+
+    errorMessage.value = error?.title;
+    resetMessages();
+  } catch (error) {
+    errorMessage.value = error.message;
+    resetMessages();
+  }
+};
+
+onMounted(async () => {
+  videoStreamKeys.value = await getVideosStreamKeys();
 });
 </script>

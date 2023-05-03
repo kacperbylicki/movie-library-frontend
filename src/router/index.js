@@ -8,6 +8,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "create-movie" */ "../views/CreateMovie.vue"),
     meta: {
       requiresAdminOrModeratorAccess: true,
+      requiresAuthentication: true,
     },
   },
   {
@@ -44,6 +45,15 @@ const routes = [
     path: "/favorites",
     name: "My Favorites",
     component: () => import(/* webpackChunkName: "my-favorites" */ "../views/MyFavorites.vue"),
+    meta: {
+      requiresCommonUserRole: true,
+      requiresAuthentication: true,
+    },
+  },
+  {
+    path: "/rented-movies",
+    name: "Rented Movies",
+    component: () => import(/* webpackChunkName: "rented-movies" */ "../views/MyRentedMovies.vue"),
     meta: {
       requiresCommonUserRole: true,
       requiresAuthentication: true,

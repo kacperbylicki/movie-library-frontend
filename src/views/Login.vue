@@ -42,68 +42,62 @@
         <a class="link link-hover ml-1" @click="redirectToRegister">Register</a>
       </p>
 
-      <button v-if="isLoading" class="btn btn-secondary btn-wide mt-4 w-80 loading"></button>
-      <button v-else class="btn btn-secondary btn-wide mt-4 w-80">Login</button>
+      <button v-if="isLoading" class="btn btn-secondary mt-4 w-80 loading"></button>
+      <button v-else class="btn btn-secondary mt-4 w-80">Login</button>
     </ValidatedForm>
   </section>
 </template>
 
-<script>
+<script setup>
 import ErrorAlert from "../components/ErrorAlert.vue";
-import { ErrorMessage, Field, Form } from "vee-validate";
+import { ErrorMessage, Field, Form as ValidatedForm } from "vee-validate";
 import { loginValidationSchema } from "../validators/login.validator";
-import { mapActions } from "vuex";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
-export default {
-  components: {
-    ValidatedForm: Form,
-    Field,
-    ErrorMessage,
-    ErrorAlert,
-  },
-  data() {
-    return {
-      isLoading: false,
-      errorMessage: null,
-      loginValidationSchema,
-    };
-  },
-  methods: {
-    ...mapActions(["login"]),
-    async handleLogin(payload) {
-      this.isLoading = true;
+const store = useStore();
+const router = useRouter();
 
-      try {
-        const { error } = await this.login(payload);
+const isLoading = ref(false);
+const errorMessage = ref(null);
 
-        this.isLoading = false;
+const login = (payload) => store.dispatch("login", payload);
 
-        if (!error) {
-          await this.$router.push("/");
-          return;
-        }
+const handleLogin = async (payload) => {
+  isLoading.value = true;
 
-        if (error?.explanation) {
-          await this.$router.push("/confirm-account");
-          return;
-        }
+  try {
+    const { error } = await login(payload);
 
-        this.errorMessage = error?.title;
-        this.resetErrorMessage();
-      } catch (error) {
-        this.isLoading = false;
-        this.errorMessage = error?.title;
-        this.resetErrorMessage();
-      }
-    },
-    resetErrorMessage() {
-      setTimeout(() => {
-        this.errorMessage = null;
-      }, 3000);
-    },
-    redirectToRegister() {
-      this.$router.push("/register");
-    },
-  },
+    isLoading.value = false;
+
+    if (!error) {
+      await router.push("/");
+      return;
+    }
+
+    if (error?.explanation) {
+      await router.push("/confirm-account");
+      return;
+    }
+
+    errorMessage.value = error?.title;
+    resetErrorMessage();
+  } catch (error) {
+    isLoading.value = false;
+    errorMessage.value = error?.title;
+    resetErrorMessage();
+  }
+};
+
+const resetErrorMessage = () => {
+  setTimeout(() => {
+    errorMessage.value = null;
+  }, 3000);
+};
+
+const redirectToRegister = () => {
+  router.push("/register");
 };
 </script>

@@ -14,6 +14,7 @@ const isAllowedMovieGenre = (genre) => {
     "Western",
     "Adventure",
     "Crime",
+    "Animation",
   ];
 
   return genres.includes(genre);
@@ -21,6 +22,7 @@ const isAllowedMovieGenre = (genre) => {
 
 export const movieValidationSchema = yup.object().shape({
   image: yup.mixed().required("Poster image is required"),
+  videoStreamKey: yup.string().required("Video stream key is required"),
   title: yup.string().required("Title is required"),
   genre: yup.array().of(
     yup

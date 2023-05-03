@@ -10,7 +10,7 @@
           <MovieMenu :movie-id="movie.uuid" @delete-movie="handleDeleteMovie" />
         </div>
         <FavoriteButton
-          v-else-if="isAuthenticated"
+          v-if="!isAdmin && isAuthenticated"
           :movie-id="movie.uuid"
           @toggle-favorite="handleToggleFavoriteMovie"
         />
@@ -68,7 +68,7 @@
       </section>
 
       <h5 class="text-xl font-bold dark:text-white mt-4">Roles</h5>
-      <section v-for="(role, index) in movie.roles" :key="index" class="p-2">
+      <section v-for="(role, index) in movie.roles" :key="index" class="p-2 mb-4">
         <div v-if="role.actor.image" class="avatar items-center">
           <div class="w-12 rounded-full ring ring-secondary ring-offset-base-100 ring-offset-2">
             <img :src="role.actor.image" />
@@ -91,8 +91,11 @@
           </span>
         </div>
       </section>
+      <RentMovieButton v-if="!isAdmin && isAuthenticated" class="mt-auto" />
     </div>
   </div>
+
+  <RentMovieModal />
 </template>
 
 <script setup>
@@ -100,6 +103,8 @@ import ErrorAlert from "../ErrorAlert.vue";
 import FavoriteButton from "../buttons/FavoriteButton.vue";
 import MenuButton from "../buttons/MenuButton.vue";
 import MovieMenu from "./MovieMenu.vue";
+import RentMovieButton from "../buttons/RentMovieButton.vue";
+import RentMovieModal from "./RentMovieModal.vue";
 import { computed, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
@@ -130,7 +135,11 @@ const resetErrorMessage = () => {
 const getInitials = (nameSurname) => {
   const [name, surname] = nameSurname.split(" ");
 
-  return `${name.charAt(0)}${surname.charAt(0)}`;
+  if (!surname) {
+    return `${name?.charAt(0)}`;
+  }
+
+  return `${name?.charAt(0)}${surname?.charAt(0)}`;
 };
 
 const handleDeleteMovie = async (movieId) => {

@@ -13,3 +13,7 @@ export * from "./delete-comment";
 export * from "./delete-movie";
 export * from "./get-favorite-movies";
 export * from "./upsert-favorite-movie";
+export * from "./video-stream-keys";
+export * from "./rented-movies";
+export * from "./rent-movie";
+export * from "./video-stream";

@@ -92,21 +92,6 @@ export const movies = {
         state.favoriteMovies.push({ movieId, isFavorite });
       }
     },
-    // toggleFavoriteMovie: (state, { movieId, isFavorite }) => {
-    //   const existingMovie = state.favoriteMovies.find((movie) => movie.movieId === movieId);
-    //   let newFavoriteMovies;
-    //   if (existingMovie) {
-    //     newFavoriteMovies = state.favoriteMovies.map((movie) => {
-    //       if (movie.movieId === movieId) {
-    //         return { ...movie, isFavorite };
-    //       }
-    //       return movie;
-    //     });
-    //   } else {
-    //     newFavoriteMovies = [...state.favoriteMovies, { movieId, isFavorite }];
-    //   }
-    //   state.favoriteMovies = newFavoriteMovies;
-    // },
   },
   getters: {
     movies: (state) => state.movies,
